@@ -27,13 +27,23 @@ public class KNoteController {
                             @RequestParam String description,
                             @RequestParam(required = false) String publish,
                             @RequestParam(required = false) String upload,
-                            Model model) throws IOException {
+                            Model model) throws Exception {
 
         if (publish != null && publish.equals("Publish")) {
             notesService.saveNote(description, model);
             notesService.getAllNotes(model);
             return "redirect:/";
         }
+
+        if (upload != null && upload.equals("Upload")) {
+            if (file != null && file.getOriginalFilename() != null
+                    && !file.getOriginalFilename().isEmpty()) {
+                notesService.uploadImage(file, description, model);
+            }
+            notesService.getAllNotes(model);
+            return "index";
+        }
+
         // After save fetch all notes again
         return "index";
     }
