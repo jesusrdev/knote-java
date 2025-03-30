@@ -1,20 +1,28 @@
 package dev.imyisus.knote_java;
 
+import jakarta.annotation.PostConstruct;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.InputStream;
 
 @Controller
+@EnableConfigurationProperties(KnoteProperties.class)
 public class KNoteController {
 
     @Autowired
     private KNoteService notesService;
+
+    @PostConstruct
+    public void init() throws InterruptedException {
+        notesService.initMinio();
+    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -46,5 +54,10 @@ public class KNoteController {
 
         // After save fetch all notes again
         return "index";
+    }
+
+    @GetMapping(value = "/img/{name}", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] getImageByName(@PathVariable String name) throws Exception {
+        return notesService.getImageByName(name);
     }
 }
