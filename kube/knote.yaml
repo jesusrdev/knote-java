@@ -14,12 +14,18 @@ spec:
     spec:
       containers:
         - name: app
-          image: imyisus/knote-java:1.0.0
+          image: imyisus/knote-java:2.0.0
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo:27017/dev
+            - name: MINIO_HOST
+              value: minio
+            - name: MINIO_ACCESS_KEY
+              value: mykey
+            - name: MINIO_SECRET_KEY
+              value: mysecret
           imagePullPolicy: Always
 
 ---
