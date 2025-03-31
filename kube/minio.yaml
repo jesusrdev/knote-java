@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: minio-pvc
 spec:
+  storageClassName: gp2-immediate
   accessModes:
     - ReadWriteOnce
   resources:
